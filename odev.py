@@ -2,6 +2,9 @@ import datetime
 import json 
 from typing import List, Dict
 
+books = [{"id": 1, "title": "Kitap 1","author":"asd",'due_time':datetime.date(2025, 10, 28),"borrowed_by":""}, {"id": 2,"author":"asd",'due_time': datetime.date(2025, 10, 28),"borrowed_by":"", "title": "Kitap 2"}]
+
+
 def _next_book_id(books: list[dict]) -> int:
     # BUGGY KOD (düzeltin):
     # return books[-1]["id"] + 1
@@ -15,7 +18,6 @@ def _next_book_id(books: list[dict]) -> int:
         return 1
     
     return books[len(books)-1]["id"]+1
-books = [{"id": 1, "title": "Kitap 1","author":"asd",'due_time':datetime.date(2025, 10, 28),"borrowed_by":""}, {"id": 2,"author":"asd",'due_time': datetime.date(2025, 10, 28),"borrowed_by":"", "title": "Kitap 2"}]
 
 def add_book(books: list[dict], title: str, author: str) -> dict:
     newBook={
@@ -121,7 +123,7 @@ save_to_file(books,"./a.txt")
 
 
 
-def load_from_file(path: str) -> List[Dict]:
+def load_from_file(path: str) -> list[dict]:
     """
     path'teki JSON içeriğini okuyup kitap listesi döndürür.
     Dosya yoksa boş liste döndürür.
@@ -138,7 +140,7 @@ def load_from_file(path: str) -> List[Dict]:
                     b["due_time"] = datetime.date.fromisoformat(due)
                 except ValueError:
                     b["due_time"] = None  # Bozuk tarih formatı varsa None yap
-
+        books=data
         return data
 
     except FileNotFoundError:
@@ -152,3 +154,4 @@ def load_from_file(path: str) -> List[Dict]:
     except Exception as e:
         print(f"⚠️ Beklenmeyen hata: {e}")
         return []
+load_from_file("./a.txt")
