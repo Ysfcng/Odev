@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "title": "Kitap 1",
+        "author": "asd",
+        "due_time": "2025-10-28",
+        "borrowed_by": "asd"
+    },
+    {
+        "id": 2,
+        "author": "asd",
+        "due_time": "2025-10-28",
+        "borrowed_by": "",
+        "title": "Kitap 2"
+    }
+]
