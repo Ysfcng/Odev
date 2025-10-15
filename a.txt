@@ -4,7 +4,7 @@
         "title": "Kitap 1",
         "author": "asd",
         "due_time": "2025-10-28",
-        "borrowed_by": "asd"
+        "borrowed_by": ""
     },
     {
         "id": 2,

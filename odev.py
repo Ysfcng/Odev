@@ -2,7 +2,7 @@ import datetime
 import json 
 from typing import List, Dict
 
-books = [{"id": 1, "title": "Kitap 1","author":"asd",'due_time':datetime.date(2025, 10, 28),"borrowed_by":""}, {"id": 2,"author":"asd",'due_time': datetime.date(2025, 10, 28),"borrowed_by":"", "title": "Kitap 2"}]
+BOOKS = [{"id": 1, "title": "Kitap 1","author":"asd",'due_time':datetime.date(2025, 10, 28),"borrowed_by":""}, {"id": 2,"author":"asd",'due_time': datetime.date(2025, 10, 28),"borrowed_by":"", "title": "Kitap 2"}]
 
 
 def _next_book_id(books: list[dict]) -> int:
@@ -24,25 +24,30 @@ def add_book(books: list[dict], title: str, author: str) -> dict:
     "id":_next_book_id(books),
     "title":title,
     "author":author,
+    "Avaible":True,
     "borrowed_by":"",
     "due_time":None
     }
-    books.append(newBook)
     if(title=="" or author==""):
         return "error"    
+    books.append(newBook)
     print(newBook)
+    return newBook
 
 def search_books(books: list[dict], query: str) -> list[dict]:
     """
     Başlık ya da yazarda 'query' geçenleri (case-insensitive) döndürür.
     Boş query -> boş liste.
     """
+    str=""
     if(query.strip()=="" or query==None):
         return 
     query=query.lower()
     for x in books:
         if(query in x["title"].lower() or query in  x["author"].lower()):
-            print(x)
+          str+="\n"+x  
+          print(x)
+    return str
     # BUGGY KOD:
     # - Büyük/küçük harf duyarlı arıyor
     # - Boş query'de tüm listeyi döndürüyor
@@ -57,7 +62,6 @@ def borrow_book(books: list[dict], book_id: int, username: str, days: int = 14) 
     book_id'li kitabı 'username' adına 'days' günlüğüne ayırır.
     Dönüş: True (başarılı) / False (kitap zaten müsait değil ya da yok)
     """
-    print(book_id)
     if(username.strip()=="" or username==None ):
         return "error"
     for x in books:
@@ -65,10 +69,12 @@ def borrow_book(books: list[dict], book_id: int, username: str, days: int = 14) 
             x["borrowed_by"]=username
             today=datetime.date.today()
             x["borrowed_by"]=username
+            x["Avaible"]=False
             x["due_time"] = today + datetime.timedelta(days=14)
             print(x)
 
             return  True
+     return false
     # TODO:
     # - ID eşleşen kitabı bul
     # - available True ise:
@@ -77,7 +83,6 @@ def borrow_book(books: list[dict], book_id: int, username: str, days: int = 14) 
     # - Aksi halde False dön
    
 
-borrow_book(books,1,"asd")
 
 
 def return_book(books: list[dict], book_id: int) -> bool:
@@ -87,23 +92,27 @@ def return_book(books: list[dict], book_id: int) -> bool:
     """
     # TODO: ID eşleşirse available=True, borrower=None, due_date=None
     if(book_id>len(books) or book_id<0):
-        return "error"
+        return False
 
     books[book_id]["borrowed_by"]=""
     books[book_id]["due_time"]=None
+    books[book_id]["Avaible"]=True
     print(books[book_id])
+    return True
 
 def list_overdue(books: list[dict], today = None) -> list[dict]:
+    str=""
     for x in books:
         today=datetime.date.today()
-        if(x.get("due_time")<today):
+        if(x["Avaible"]==False&&x.get("due_time")<today):
             print("tarihi gecti",x["due_time"])
+            str+="\n"+x
+    return str
     # TODO:
     # - today yoksa bugünün tarihini kullanın (helper var: _today_str)
     # - due_date < today olan ve available=False olanları seçin
 
 
-list_overdue(books)
 
 def save_to_file(books: list[dict], path: str) -> None:
     """
@@ -119,7 +128,7 @@ def save_to_file(books: list[dict], path: str) -> None:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(books, f, ensure_ascii=False, indent=4)
 
-save_to_file(books,"./a.txt")
+save_to_file(BOOKS,"./a.txt")
 
 
 
